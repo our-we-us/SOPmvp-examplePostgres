@@ -125,6 +125,7 @@ public class NurseController {
 
     private final CommandGateway commandGateway;
 
+    @Autowired
     public NurseController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

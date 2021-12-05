@@ -2,17 +2,17 @@
 
 ## Create Project
 
-**e.g. examplepostgres**
+**e.g. examplePostgres**
 
 - with Spring Initializr
 
 ### Added dependencies
 
-[x] Lombok
-[x] Spring Web
-[ ] Axon Framework Spring Support
-[ ] Spring Data JPA
-[ ] PostgreSQL Driver
+- [x] Lombok
+- [x] Spring Web
+- [ ] Axon Framework Spring Support
+- [ ] Spring Data JPA
+- [ ] PostgreSQL Driver
 
 ## Prepare Axon Server
 
@@ -27,13 +27,13 @@ java -jar axonserver.jar
 
 ### Open AxonDashboard
 
-[http://localhost:8024/]
+http://localhost:8024/
 
 ---
 
 ## Step By Step
 
-### All in **com.example.examplepostgres**
+### All in ---> **com.example.examplepostgres**
 
 1. Create class **rest.NurseController.java**
 
@@ -94,11 +94,11 @@ public class CreateNurseRestModel {
 ```
 
 - Added dependencies
-  [x] Lombok
-  [x] Spring Web
-  [x] Axon Framework Spring Support
-  [ ] Spring Data JPA
-  [ ] PostgreSQL Driver
+  - [x] Lombok
+  - [x] Spring Web
+  - [x] Axon Framework Spring Support
+  - [ ] Spring Data JPA
+  - [ ] PostgreSQL Driver
 
 5. Create class **command.CreateNurseCommand**
 

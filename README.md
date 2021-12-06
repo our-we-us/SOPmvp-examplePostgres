@@ -2,9 +2,8 @@
 
 ## Create Project
 
-- e.g. formService
-
 - with Spring Initializr
+- e.g. formService
 
 ### Added dependencies
 
@@ -16,7 +15,7 @@
 
 ## Prepare Axon Server
 
-- install Axon Server [https://axoniq.io/product-overview/axon-server]
+- install [Axon Server](https://axoniq.io/product-overview/axon-server)
 - **cd ~/AxonServer-4.5.9**
 
 ### Start Axon Server
@@ -215,7 +214,8 @@ java -jar axonserver.jar
 ```
 
 11. Run and Test Web Service
-    - See Result on AxonDashboard
+
+- See Result on AxonDashboard
 
 ---
 
@@ -264,22 +264,30 @@ POSTGRES_DATABASE=formService
 
 3. Run and See PGadmin
 
-```
-docker-compose up
-```
+   - Start Docker Container
+
+   ```
+   docker-compose up
+   ```
+
+   - Stop Docker Container
+
+   ```
+   docker-compose down
+   ```
 
 - See PGadmin [http://localhost:8081](http://localhost:8081)
 
 1. Login PGadmin
 
-   ![login](https://imgur.com/nEvHSqX)
+   ![login](https://imgur.com/nEvHSqX.png)
 
 2. ## Add Service
 
-   ![add service](https://imgur.com/hfR8zCn)
+   ![add service](https://imgur.com/hfR8zCn.png)
 
 3. See Database
 
-   ![database](https://imgur.com/5XfteIn)
+   ![database](https://i.imgur.com/5XfteIn.png)
 
 ---

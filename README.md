@@ -26,7 +26,7 @@ java -jar axonserver.jar
 
 ### Open AxonDashboard
 
-[http://localhost:8024/](http://localhost:8024/)
+> [http://localhost:8024/](http://localhost:8024/)
 
 ---
 
@@ -74,7 +74,7 @@ public class CreateFormRestModel {
 
 4. Add Axon Framework Spring Support
 
-```
+```xml
 // pom.xml
 
 <!-- https://mvnrepository.com/artifact/org.axonframework/axon-spring -->
@@ -217,7 +217,70 @@ java -jar axonserver.jar
 
 - See Result on AxonDashboard
 
----
+## Command Query Responsibility Segregation (CQRS)
+
+> Write on Read Database
+
+12. Add Spring Boot Starter Data JPA
+
+```xml
+// pom.xml
+
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+    <version>2.6.1</version>
+</dependency>
+
+```
+
+- Added dependencies
+  - [x] Lombok
+  - [x] Spring Web
+  - [x] Axon Framework Spring Support
+  - [x] Spring Data JPA
+  - [ ] PostgreSQL Driver
+
+13. Add PostgresSQL
+
+```xml
+// pom.xml
+
+<!-- PostgreSQL -->
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+</dependency>
+
+```
+
+- Added dependencies
+  - [x] Lombok
+  - [x] Spring Web
+  - [x] Axon Framework Spring Support
+  - [x] Spring Data JPA
+  - [x] PostgreSQL Driver
+
+14. config database in `application.properties`
+
+```
+## default connection pool
+spring.datasource.hikari.connectionTimeout=20000
+spring.datasource.hikari.maximumPoolSize=5
+
+## PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/formService
+spring.datasource.username=postgres
+spring.datasource.password=password
+
+#drop n create table again, good for testing, comment this in production
+spring.jpa.hibernate.ddl-auto=create
+```
+
+> config same in docker-compose.yml !
+
+> > username, password
 
 ## Connect Postgres Database and PGadmin
 
@@ -262,7 +325,7 @@ POSTGRES_PASSWORD=password
 POSTGRES_DATABASE=formService
 ```
 
-3. Run and See PGadmin
+3. Run(Start) and See PGadmin
 
    - Start Docker Container
 
@@ -282,7 +345,7 @@ POSTGRES_DATABASE=formService
 
    ![login](https://imgur.com/nEvHSqX.png)
 
-2. ## Add Service
+2. Add Service
 
    ![add service](https://imgur.com/hfR8zCn.png)
 

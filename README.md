@@ -2,7 +2,7 @@
 
 ## Create Project
 
-**e.g. examplePostgres**
+- e.g. formService
 
 - with Spring Initializr
 
@@ -27,52 +27,46 @@ java -jar axonserver.jar
 
 ### Open AxonDashboard
 
-http://localhost:8024/
+[http://localhost:8024/](http://localhost:8024/)
 
 ---
 
 ## Step By Step
 
-### All in ---> **com.example.examplepostgres**
+### All in `com.example.formservice`
 
-1. Create class **rest.NurseController.java**
+1. Create class `rest.FormController.java`
 
 ```java
 @RestController
-@RequestMapping("/nurse")
-public class NurseController {
+@RequestMapping("/form")
+public class FormController {
 
     @PostMapping
-    public String createNurse(@RequestBody CreateNurseRestModel model) {
-        return "create : " + model.getFirstname();
+    public String createTest(@RequestBody CreateFormRestModel model) {
+        return "create : " + model.getName();
     }
 }
 ```
 
-2. Create class **rest.CreateNurseRestModel.java**
+2. Create class `rest.CreateFormRestModel.java`
 
 ```java
 @Data
-public class CreateNurseRestModel {
-    private String NID;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String password;
+public class CreateFormRestModel {
+    private String name;
+    private String description;
 }
 ```
 
 3. Run and Test Web Service
 
 ```json
-### POST http://localhost:8080/nurse
+### POST http://localhost:8080/form
 
 {
-    "NID": "{{$randomUUID}}",
-    "firstname": "{{$randomFirstName}}",
-    "lastname": "{{$randomLastName}}",
-    "username": "{{$randomUserName}}",
-    "password": "{{$randomPassword}}"
+    "name": "name",
+    "description": "description"
 }
 
 ```
@@ -100,46 +94,41 @@ public class CreateNurseRestModel {
   - [ ] Spring Data JPA
   - [ ] PostgreSQL Driver
 
-5. Create class **command.CreateNurseCommand**
+5. Create class `command.CreateFormCommand`
 
 ```java
 @Builder
 @Data
-public class CreateNurseCommand {
+public class CreateFormCommand {
     @TargetAggregateIdentifier
-    private final String id;
-    private final String NID;
-    private final String firstname;
-    private final String lastname;
-    private final String username;
-    private final String password;
+    private final String formId;
+    private final String name;
+    private final String description;
 }
 ```
 
-6. Edit class **NurseController.java**
+6. Edit class `FormController.java`
 
 ```java
 @RestController
-@RequestMapping("/nurse")
-public class NurseController {
+@RequestMapping("/form")
+public class FormController {
 
     private final CommandGateway commandGateway;
 
     @Autowired
-    public NurseController(CommandGateway commandGateway) {
+    public FormController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
     @PostMapping
-    public String createNurse(@RequestBody CreateNurseRestModel model) {
-        CreateNurseCommand command = CreateNurseCommand.builder()
-                .id(UUID.randomUUID().toString())
-                .NID(model.getNID())
-                .firstname(model.getFirstname())
-                .lastname(model.getLastname())
-                .username(model.getUsername())
-                .password(model.getPassword())
+    public String createTest(@RequestBody CreateFormRestModel model) {
+        CreateFormCommand command = CreateFormCommand.builder()
+                .formId(UUID.randomUUID().toString())
+                .name(model.getName())
+                .description(model.getDescription())
                 .build();
+
         String result;
         try {
             result = commandGateway.sendAndWait(command);
@@ -151,82 +140,70 @@ public class NurseController {
 }
 ```
 
-7. Create class **command.NurseAggregate.java**
+7. Create class `command.FormAggregate.java`
 
 ```java
 @Aggregate
-public class NurseAggregate {
-    @AggregateIdentifier
-    private String id;
-    private String NID;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String password;
+public class FormAggregate {
 
-    public NurseAggregate() {
+    @AggregateIdentifier
+    private String formID;
+    private String name;
+    private String description;
+
+    public FormAggregate() {
     }
 
     @CommandHandler
-    public NurseAggregate(CreateNurseCommand createNurseCommand) {
-
-        // just example, have more!
-        if(createNurseCommand.getNID() == null || createNurseCommand.getNID().isBlank()) {
-            throw new IllegalArgumentException("ID cannot be empty");
+    public FormAggregate(CreateFormCommand createFormCommand) {
+        if(createFormCommand.getName() == null || createFormCommand.getName().isBlank()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
     }
-```
-
-8. Create class **event.NurseCreatedEvent.java**
-
-```java
-@Data
-public class NurseCreatedEvent {
-    private String id;
-    private String NID;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String password;
 }
 ```
 
-9. Edit class **NurseAggregate.java**
+8. Create class `event.FormCreatedEvent.java`
+
+```java
+@Data
+public class FormCreatedEvent {
+    private String formId;
+    private String name;
+    private String description;
+}
+```
+
+9. Edit class `FormAggregate.java`
 
 ```java
 @Aggregate
-public class NurseAggregate {
-    @AggregateIdentifier
-    private String id;
-    private String NID;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String password;
+public class FormAggregate {
 
-    public NurseAggregate() {
+    @AggregateIdentifier
+    private String formID;
+    private String name;
+    private String description;
+
+    public FormAggregate() {
     }
 
     @CommandHandler
-    public NurseAggregate(CreateNurseCommand createNurseCommand) {
-        // just example, have more!
-        if(createNurseCommand.getNID() == null || createNurseCommand.getNID().isBlank()) {
-            throw new IllegalArgumentException("ID cannot be empty");
+    public FormAggregate(CreateFormCommand createFormCommand) {
+        if(createFormCommand.getName() == null || createFormCommand.getName().isBlank()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
 
-        NurseCreatedEvent nurseCreatedEvent = new NurseCreatedEvent();
-        BeanUtils.copyProperties(createNurseCommand,nurseCreatedEvent);
-        AggregateLifecycle.apply(nurseCreatedEvent);
+        FormCreatedEvent formCreatedEvent = new FormCreatedEvent();
+        BeanUtils.copyProperties(createFormCommand, formCreatedEvent);
+        AggregateLifecycle.apply(formCreatedEvent);
     }
 
     @EventSourcingHandler
-    public void on(NurseCreatedEvent nurseCreatedEvent) {
-        this.id = nurseCreatedEvent.getId();
-        this.NID = nurseCreatedEvent.getNID();
-        this.firstname = nurseCreatedEvent.getFirstname();
-        this.lastname = nurseCreatedEvent.getLastname();
-        this.username = nurseCreatedEvent.getUsername();
-        this.password = nurseCreatedEvent.getPassword();
+    public void on(FormCreatedEvent formCreatedEvent) {
+        this.formID = formCreatedEvent.getFormId();
+        this.name = formCreatedEvent.getName();
+        this.description = formCreatedEvent.getDescription();
     }
 }
 ```
@@ -237,4 +214,72 @@ public class NurseAggregate {
 java -jar axonserver.jar
 ```
 
-11. Run and Test Web Service ---> See Result on AxonDashboard
+11. Run and Test Web Service
+    - See Result on AxonDashboard
+
+---
+
+## Connect Postgres Database and PGadmin
+
+- You can run Postgres in another way.
+
+1. Create file `docker-compose.ymal`
+
+```yaml
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:14.1
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    ports:
+      - ${POSTGRES_PORT}:5432
+  pg_admin:
+    image: dpage/pgadmin4:6.1
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: changeme
+    ports:
+      - 8081:80
+    volumes:
+      - pgadmin_pv:/var/lib/pgadmin
+
+volumes:
+  pgadmin_pv:
+```
+
+2. Create file `.env`
+
+```
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DATABASE=formService
+```
+
+3. Run and See PGadmin
+
+```
+docker-compose up
+```
+
+- See PGadmin [http://localhost:8081](http://localhost:8081)
+
+1. Login PGadmin
+
+   ![login](https://imgur.com/nEvHSqX)
+
+2. ## Add Service
+
+   ![add service](https://imgur.com/hfR8zCn)
+
+3. See Database
+
+   ![database](https://imgur.com/5XfteIn)
+
+---

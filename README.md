@@ -3,7 +3,7 @@
 ## Create Project
 
 - with Spring Initializr
-- e.g. formService
+- e.g. form-service
 
 ### Added dependencies
 
@@ -278,9 +278,78 @@ spring.datasource.password=password
 spring.jpa.hibernate.ddl-auto=create
 ```
 
-> config same in docker-compose.yml !
+- config value must be the same `docker-compose.yml` or another way
+  - e.g. username, password
 
-> > username, password
+15. Create class `core.FormEntity.java`
+
+```java
+@Entity
+@Table(name = "form_name")
+@Data
+public class FormEntity implements Serializable {
+
+    private static final long serialVersionUID = -87208572351574652L;
+
+    @Id
+    @Column(unique = true)
+    private String formId;
+    private String name;
+    private String description;
+}
+```
+
+> How to Add ‘serialVersionUID’ field
+
+    ![setting](https://i.imgur.com/DurAvut.png)
+    ![add](https://i.imgur.com/Trw5xqW.png)
+
+16. Create interface `core.data.FormRepository`
+
+```java
+public interface FormRepository extends JpaRepository<FormEntity, String> {
+
+    FormEntity findByFormId(String formId);
+
+    FormEntity findByFormIdOrName(String formId, String name);
+}
+```
+
+17. move `event package` into `core package`
+
+> **formservice.event** to **formservice.core.event**
+
+18. Create class `query.FormEventsHandler.java`
+
+```java
+@Entity
+@Component
+public class FormEventsHandler {
+
+    private final FormRepository formRepository;
+
+    public FormEventsHandler(FormRepository formRepository) {
+        this.formRepository = formRepository;
+    }
+
+    @EventHandler
+    public void on(FormCreatedEvent event) {
+        FormEntity formEntity = new FormEntity();
+        BeanUtils.copyProperties(event, formEntity);
+        formRepository.save(formEntity);
+    }
+}
+```
+
+19. Start Axon Server
+
+```
+java -jar axonserver.jar
+```
+
+20. Run Postgres Database and Run form-service
+
+---
 
 ## Connect Postgres Database and PGadmin
 

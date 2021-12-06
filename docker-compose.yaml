@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    image: postgres:14.1
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    ports:
+      - ${POSTGRES_PORT}:5432
+  pg_admin:
+    image: dpage/pgadmin4:6.1
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: changeme
+    ports:
+      - 8081:80
+    volumes:
+      - pgadmin_pv:/var/lib/pgadmin
+
+volumes:
+  pgadmin_pv:

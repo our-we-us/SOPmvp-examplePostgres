@@ -58,7 +58,7 @@ public class CreateFormRestModel {
 }
 ```
 
-3. Run and Test Web Service
+3. Run and Test form-service
 
 ```json
 ### POST http://localhost:8080/form
@@ -278,7 +278,7 @@ spring.datasource.password=password
 spring.jpa.hibernate.ddl-auto=create
 ```
 
-- config value must be the same `docker-compose.yml` or another way
+- config value must be the same, whether you run database with `docker-compose.yml` or another way
   - e.g. username, password
 
 15. Create class `core.FormEntity.java`
@@ -301,8 +301,8 @@ public class FormEntity implements Serializable {
 
 > How to Add ‘serialVersionUID’ field
 
-    ![setting](https://i.imgur.com/DurAvut.png)
-    ![add](https://i.imgur.com/Trw5xqW.png)
+![setting](https://i.imgur.com/DurAvut.png)
+![add](https://i.imgur.com/Trw5xqW.png)
 
 16. Create interface `core.data.FormRepository`
 
@@ -317,7 +317,7 @@ public interface FormRepository extends JpaRepository<FormEntity, String> {
 
 17. move `event package` into `core package`
 
-> **formservice.event** to **formservice.core.event**
+- `formservice.event` to `formservice.core.event`
 
 18. Create class `query.FormEventsHandler.java`
 
@@ -348,6 +348,18 @@ java -jar axonserver.jar
 ```
 
 20. Run Postgres Database and Run form-service
+
+> Test Create Form and See Result in `form_name` table
+
+```json
+### POST http://localhost:8080/form
+
+{
+    "name": "name",
+    "description": "description"
+}
+
+```
 
 ---
 

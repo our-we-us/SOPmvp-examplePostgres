@@ -6,7 +6,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Builder
 @Data
-public class CreateFormCommand {
+public class UpdateFormCommand {
     @TargetAggregateIdentifier
     private final String formId;
 

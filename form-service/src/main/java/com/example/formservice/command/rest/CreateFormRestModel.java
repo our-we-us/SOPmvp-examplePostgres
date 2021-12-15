@@ -1,4 +1,4 @@
-package com.example.formservice.rest;
+package com.example.formservice.command.rest;
 
 import lombok.Data;
 

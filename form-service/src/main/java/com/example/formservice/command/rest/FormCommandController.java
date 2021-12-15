@@ -1,4 +1,4 @@
-package com.example.formservice.rest;
+package com.example.formservice.command.rest;
 
 import com.example.formservice.command.CreateFormCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -9,12 +9,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/form")
-public class FormController {
+public class FormCommandController {
 
     private final CommandGateway commandGateway;
 
     @Autowired
-    public FormController(CommandGateway commandGateway) {
+    public FormCommandController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
